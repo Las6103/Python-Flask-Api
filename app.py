@@ -62,10 +62,21 @@ def beers():
         return jsonify(beer_list)
 
 
-@app.route('/beers/<id>', methods=['GET'])
-def beer_id(id):
+@app.route('/beers/<_id>', methods=['GET', 'PUT', 'DELETE'])
+def beer_id(_id):
+    beer = Beer.get(Beer.id == _id)
     if request.method == 'GET':
-        return jsonify(model_to_dict(Beer.get(Beer.id == id)))
+        return jsonify(model_to_dict(beer))
+    elif request.method == 'PUT':
+        items = list(request.get_json().items())
+        for item in items:
+            stuff = Beer.update({item[0]: item[1]}).where(Beer.id == beer)
+            stuff.execute()
+
+        return 'success'
+    elif request.method == 'DELETE':
+        beer.delete_instance()
+        return 'success'
 
 
 @app.route('/beers', methods=['POST'])
