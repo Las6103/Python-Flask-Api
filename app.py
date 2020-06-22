@@ -50,7 +50,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return "Hello world!"
+    return "Hello! Welcome to the beer api! To find all the beers continue to localhost:5000/beers"
 
 
 @app.route('/beers', methods=['GET'])
@@ -70,8 +70,9 @@ def beer_id(_id):
     elif request.method == 'PUT':
         items = list(request.get_json().items())
         for item in items:
-            stuff = Beer.update({item[0]: item[1]}).where(Beer.id == beer)
-            stuff.execute()
+            beer_update = Beer.update(
+                {item[0]: item[1]}).where(Beer.id == beer)
+            beer_update.execute()
 
         return 'success'
     elif request.method == 'DELETE':
